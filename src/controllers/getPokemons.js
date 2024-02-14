@@ -2,9 +2,8 @@ const axios = require('axios')
 const { Pokemon, Type } = require('../db')
 
 const getPokemons = async () => {
-    const url = 'https://pokeapi.co/api/v2/pokemon'
     const limit = 350
-    const { data } = await axios(`${url}?limit=${limit}&offset=00`)
+    const { data } = await axios(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=00`)
     const listPokemons = data.results
 
     const detailPokemons = await Promise.all(listPokemons.map(async (pokemon) => {
