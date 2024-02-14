@@ -4,11 +4,11 @@ const { Pokemon, Type } = require('../db')
 const getPokemons = async () => {
     const url = 'https://pokeapi.co/api/v2/pokemon'
     const limit = 350
-    const { data } = await axios(`${url}?offset=00&limit=${limit}`)
+    const { data } = await axios(`${url}?limit=${limit}&offset=00`)
     const listPokemons = data.results
 
     const detailPokemons = await Promise.all(listPokemons.map(async (pokemon) => {
-        const { data } = await axios({url:pokemon.url, timeout: 10000})
+        const { data } = await axios(pokemon.url)
         const characterPokemon = {
             id: data.id,
             name: data.name,
@@ -23,8 +23,20 @@ const getPokemons = async () => {
         }
         return characterPokemon
     }))
-
-    return detailPokemons
+    const pokemons = await Pokemon.findAll({
+        include: {
+            model: Type,
+            attributes: {
+                exclude: ['id']
+            },
+            through: {
+                attributes: []
+            }
+        }
+    });
+    
+    const pokemonsCombined = [...detailPokemons, ...pokemons]
+    return pokemonsCombined
 
 }
 
