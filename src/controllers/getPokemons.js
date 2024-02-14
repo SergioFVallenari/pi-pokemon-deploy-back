@@ -2,7 +2,7 @@ const axios = require('axios')
 const { Pokemon, Type } = require('../db')
 
 const getPokemons = async () => {
-    const limit = 10
+    const limit = 150
     const { data } = await axios(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=00`)
     const listPokemons = data.results
 
